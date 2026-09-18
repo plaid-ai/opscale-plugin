@@ -1,0 +1,12 @@
+{
+  "name": "opscale",
+  "version": "0.1.0",
+  "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server and a procedure skill that checks OPSCALE once per request.",
+  "author": {
+    "name": "Plaid Labs"
+  },
+  "homepage": "https://github.com/plaid-ai/opscale-plugin",
+  "repository": "https://github.com/plaid-ai/opscale-plugin",
+  "license": "MIT",
+  "keywords": ["opscale", "skills", "mcp", "organization", "workflow"]
+}

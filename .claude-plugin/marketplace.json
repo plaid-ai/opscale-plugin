@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "plaidlabs",
+  "description": "Plugins from Plaid Labs. Currently: OPSCALE, which connects Claude Code to your organization's OPSCALE Skills.",
+  "owner": {
+    "name": "Plaid Labs"
+  },
+  "plugins": [
+    {
+      "name": "opscale",
+      "source": "./plugins/opscale",
+      "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server and a procedure skill that checks OPSCALE once per request.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Plaid Labs"
+      },
+      "homepage": "https://github.com/plaid-ai/opscale-plugin",
+      "license": "MIT",
+      "keywords": ["opscale", "skills", "mcp", "organization", "workflow"],
+      "category": "productivity"
+    }
+  ]
+}

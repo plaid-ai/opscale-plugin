@@ -1,0 +1,37 @@
+{
+  "tools": [
+    {
+      "name": "demo-finance-monthly-pnl",
+      "title": "월간 손익 요약",
+      "description": "재경팀 표준 월간 손익 요약 작성 절차입니다. 매출, 매출원가, 판관비 월계로 매출총이익과 영업이익을 계산하고 재경팀 보고 양식으로 정리합니다. 손익, 손익계산서, P&L, 월간 실적 정리 요청에 사용하세요. Returned bundles must be materialized in system temp only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "request": { "type": "string" },
+          "local_context": { "type": "object" }
+        },
+        "required": ["request"]
+      }
+    },
+    {
+      "name": "opscale_read_bundle_file",
+      "title": "OPSCALE Skill bundle 파일 읽기",
+      "description": "OPSCALE Skill tool 결과가 반환한 resource URI의 파일 내용을 읽습니다. Skill entry 지시에 필요한 reference, script, asset에만 사용하세요.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "uri": { "type": "string", "description": "Skill tool 결과에 포함된 ops-skill resource URI입니다." }
+        },
+        "required": ["uri"]
+      },
+      "annotations": { "readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false }
+    },
+    {
+      "name": "opscale_skill_guide",
+      "title": "OPSCALE Skill 작성 지침",
+      "description": "OPSCALE Skill 작성 지침을 반환합니다. 번들 구조, entry frontmatter 규칙, 본문 작성법, 부속 파일 활용, 런타임 제약을 반환합니다.",
+      "inputSchema": { "type": "object", "properties": {} },
+      "annotations": { "readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false }
+    }
+  ]
+}
