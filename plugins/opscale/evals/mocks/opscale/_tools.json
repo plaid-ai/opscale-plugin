@@ -7,10 +7,16 @@
       "inputSchema": {
         "type": "object",
         "properties": {
-          "request": { "type": "string" },
-          "local_context": { "type": "object" }
+          "request": {
+            "type": "string"
+          },
+          "local_context": {
+            "type": "object"
+          }
         },
-        "required": ["request"]
+        "required": [
+          "request"
+        ]
       }
     },
     {
@@ -20,18 +26,59 @@
       "inputSchema": {
         "type": "object",
         "properties": {
-          "uri": { "type": "string", "description": "Skill tool 결과에 포함된 ops-skill resource URI입니다." }
+          "uri": {
+            "type": "string",
+            "description": "Skill tool 결과에 포함된 ops-skill resource URI입니다."
+          }
         },
-        "required": ["uri"]
+        "required": [
+          "uri"
+        ]
       },
-      "annotations": { "readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false }
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "opscale_get_asset_url",
+      "title": "OPSCALE binary asset URL 발급",
+      "description": "Skill bundle의 binary 파일을 조회할 수 있는 단기 원본 URL을 발급합니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "description": "Skill bundle resource URI입니다."
+          }
+        },
+        "required": [
+          "uri"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "opscale_skill_guide",
       "title": "OPSCALE Skill 작성 지침",
       "description": "OPSCALE Skill 작성 지침을 반환합니다. 번들 구조, entry frontmatter 규칙, 본문 작성법, 부속 파일 활용, 런타임 제약을 반환합니다.",
-      "inputSchema": { "type": "object", "properties": {} },
-      "annotations": { "readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false }
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     }
   ]
 }

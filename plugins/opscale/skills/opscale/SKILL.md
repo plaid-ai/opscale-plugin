@@ -10,14 +10,15 @@ OPSCALE publishes an organization's approved workflows and knowledge as MCP tool
 ## 1. Discover
 
 1. List the tools of the `opscale` MCP server. In Claude Code they appear as `mcp__plugin_opscale_opscale__<tool>` and may be deferred, so search for them (for example with ToolSearch and the keyword `opscale`) instead of assuming there are none.
-2. Skills are named `<org>-<project>-<skill>`. Two server-wide tools, `opscale_read_bundle_file` and `opscale_skill_guide`, are helpers, not Skills.
+2. Skills are named `<org>-<project>-<skill>`. Three server-wide tools, `opscale_read_bundle_file`, `opscale_get_asset_url`, and `opscale_skill_guide`, are helpers, not Skills.
 3. Compare the user's request with each Skill's description. Do this once per request even when the request looks simple or you could handle it directly.
 4. If no Skill matches, proceed normally without OPSCALE. Do not invent organization policy or shared-state identifiers.
 5. If OPSCALE is not connected or returns an authentication error, tell the user how to authenticate (Claude Code: `/mcp`, choose `opscale`, then Authenticate; Codex: `/mcp` shows servers that need login) and proceed without guessing organization policy.
 
 ## 2. Call
 
-- Call the matching Skill tool. Pass the user's request and the relevant local context in the arguments its input schema asks for.
+- Pass only the fields the tool's input schema names. Put the user's task in `request` and only non-sensitive facts in `local_context`: file paths, project and framework names, relevant snippets.
+- Remove secrets before sending. Never include credentials, tokens, API keys, `.env` contents, cookies, private keys, or personal data, and strip any secret that appears in the request text itself. If a Skill genuinely needs a secret, stop and ask the user before sending it.
 - Follow the prerequisites and call order stated in the tool description. If several Skills apply, call them in that order.
 
 ## 3. Use the response
