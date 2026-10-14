@@ -8,6 +8,7 @@
   "plugins": [
     {
       "name": "opscale",
+      "displayName": "OPSCALE",
       "source": "./plugins/opscale",
       "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server and a procedure skill that checks OPSCALE once per request.",
       "version": "0.1.0",

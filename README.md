@@ -38,7 +38,10 @@ plugins/opscale/                  the plugin
   .claude-plugin/plugin.json      Claude Code manifest
   .codex-plugin/plugin.json       Codex manifest
   .mcp.json                       OPSCALE MCP server
+  assets/                         plugin logo and composer icon (Codex UI, Anthropic directory listing)
   skills/opscale/SKILL.md         procedure skill
+  skills/opscale/agents/openai.yaml  skill display name and icon for the Codex UI
+  skills/opscale/assets/          skill icons referenced by openai.yaml
   evals/                          claude plugin eval cases
 ```
 
