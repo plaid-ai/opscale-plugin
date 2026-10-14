@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "opscale": {
+    "OPSCALE": {
       "type": "http",
       "url": "https://mcp-opscale.plaidlabs.ai/"
     }

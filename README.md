@@ -18,7 +18,7 @@ The plugin contains no organization content. What you can see and run is decided
 /plugin install opscale@plaidlabs
 ```
 
-Then run `/mcp`, choose `opscale`, and sign in.
+Then run `/mcp`, choose `OPSCALE`, and sign in.
 
 ### Codex
 
@@ -27,7 +27,7 @@ codex plugin marketplace add plaid-ai/opscale-plugin
 codex plugin add opscale@plaidlabs
 ```
 
-Start a new session, then run `/mcp` to sign in to `opscale`.
+Start a new session, then run `/mcp` to sign in to `OPSCALE`.
 
 ## Repository layout
 
@@ -71,4 +71,4 @@ MIT
 
 Claude Code와 Codex에서 조직의 OPSCALE Skill을 바로 쓰기 위한 플러그인입니다. OPSCALE MCP 서버 연결과 절차 스킬 하나만 담고 있으며, 조직 콘텐츠는 들어 있지 않습니다. 접근 권한은 OPSCALE 로그인(OAuth)이 결정합니다.
 
-설치 후 Claude Code는 `/mcp`에서, Codex는 새 세션을 열고 `/mcp`에서 `opscale`에 로그인하면 됩니다.
+설치 후 Claude Code는 `/mcp`에서, Codex는 새 세션을 열고 `/mcp`에서 `OPSCALE`에 로그인하면 됩니다.
