@@ -9,11 +9,11 @@ OPSCALE publishes an organization's approved workflows and knowledge as MCP tool
 
 ## 1. Discover
 
-1. List the tools of the `opscale` MCP server. In Claude Code they appear as `mcp__plugin_opscale_opscale__<tool>` and may be deferred, so search for them (for example with ToolSearch and the keyword `opscale`) instead of assuming there are none.
+1. List the tools of the `OPSCALE` MCP server. In Claude Code they appear as `mcp__plugin_opscale_OPSCALE__<tool>` and may be deferred, so search for them (for example with ToolSearch and the keyword `opscale`) instead of assuming there are none.
 2. Skills are named `<org>-<project>-<skill>`. Three server-wide tools, `opscale_read_bundle_file`, `opscale_get_asset_url`, and `opscale_skill_guide`, are helpers, not Skills.
 3. Compare the user's request with each Skill's description. Do this once per request even when the request looks simple or you could handle it directly.
 4. If no Skill matches, proceed normally without OPSCALE. Do not invent organization policy or shared-state identifiers.
-5. If OPSCALE is not connected or returns an authentication error, tell the user how to authenticate (Claude Code: `/mcp`, choose `opscale`, then Authenticate; Codex: `/mcp` shows servers that need login) and proceed without guessing organization policy.
+5. If OPSCALE is not connected or returns an authentication error, tell the user how to authenticate (Claude Code: `/mcp`, choose `OPSCALE`, then Authenticate; Codex: `/mcp` shows servers that need login) and proceed without guessing organization policy.
 
 ## 2. Call
 
