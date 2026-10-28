@@ -79,6 +79,182 @@
         "idempotentHint": true,
         "openWorldHint": false
       }
+    },
+    {
+      "name": "opscale_list_skill_targets",
+      "title": "OPSCALE Skill 저작 대상 조회",
+      "description": "OPSCALE Skill 저작 도구다. 저장하면 바로 조직에 게시되므로 사용자가 이 대화에서 직접 요청한 경우에만 쓴다. `opscale_list_skill_targets`로 대상을 정하고, 수정이면 `opscale_get_skill_draft`로 최신 draft를 읽은 뒤 `opscale_create_skill` 또는 `opscale_update_skill`로 저장한다. Skill을 추가·수정할 수 있는 프로젝트와 각 프로젝트의 Skill 목록을 반환합니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "opscale_get_skill_draft",
+      "title": "OPSCALE Skill draft 읽기",
+      "description": "OPSCALE Skill 저작 도구다. 저장하면 바로 조직에 게시되므로 사용자가 이 대화에서 직접 요청한 경우에만 쓴다. `opscale_list_skill_targets`로 대상을 정하고, 수정이면 `opscale_get_skill_draft`로 최신 draft를 읽은 뒤 `opscale_create_skill` 또는 `opscale_update_skill`로 저장한다. 수정 직전에 최신 draft의 entry 내용, 파일 목록과 draft URI, draft_revision, 웹에서 게시하지 않은 변경을 반환합니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "skill_project_id": {
+            "type": "string",
+            "description": "opscale_list_skill_targets가 반환한 Skill 식별자입니다."
+          }
+        },
+        "required": [
+          "skill_project_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "opscale_create_skill",
+      "title": "OPSCALE Skill 추가·게시",
+      "description": "OPSCALE Skill 저작 도구다. 저장하면 바로 조직에 게시되므로 사용자가 이 대화에서 직접 요청한 경우에만 쓴다. `opscale_list_skill_targets`로 대상을 정하고, 수정이면 `opscale_get_skill_draft`로 최신 draft를 읽은 뒤 `opscale_create_skill` 또는 `opscale_update_skill`로 저장한다. 프로젝트에 새 Skill을 만들고 바로 게시합니다. 텍스트 파일만 보낼 수 있습니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "이번 버전에서 바뀐 것을 한 줄로 씁니다(최대 200자)."
+          },
+          "message": {
+            "type": "string",
+            "description": "왜 바꿨는지와 쓰는 사람에게 달라지는 점을 씁니다(선택, 최대 2000자)."
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "true면 저장·게시하지 않고 검증 결과와 변경 미리보기만 반환합니다."
+          },
+          "project_id": {
+            "type": "string",
+            "description": "opscale_list_skill_targets가 반환한 프로젝트 식별자입니다."
+          },
+          "name": {
+            "type": "string",
+            "description": "웹에 표시할 Skill 이름입니다. 생략하면 entry frontmatter name을 씁니다."
+          },
+          "description": {
+            "type": "string",
+            "description": "웹에 표시할 선택 입력 설명입니다."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Skill root 기준 상대 경로입니다. 예: SKILL.md"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "파일 전체 텍스트 내용입니다."
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ]
+            },
+            "maxItems": 50,
+            "description": "entry 파일(SKILL.md)을 포함한 Skill 파일 전체입니다."
+          }
+        },
+        "required": [
+          "project_id",
+          "files",
+          "title"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "opscale_update_skill",
+      "title": "OPSCALE Skill 수정·게시",
+      "description": "OPSCALE Skill 저작 도구다. 저장하면 바로 조직에 게시되므로 사용자가 이 대화에서 직접 요청한 경우에만 쓴다. `opscale_list_skill_targets`로 대상을 정하고, 수정이면 `opscale_get_skill_draft`로 최신 draft를 읽은 뒤 `opscale_create_skill` 또는 `opscale_update_skill`로 저장한다. 기존 Skill의 파일을 추가·수정·삭제하고 바로 게시합니다. 보내지 않은 파일은 그대로 남습니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "이번 버전에서 바뀐 것을 한 줄로 씁니다(최대 200자)."
+          },
+          "message": {
+            "type": "string",
+            "description": "왜 바꿨는지와 쓰는 사람에게 달라지는 점을 씁니다(선택, 최대 2000자)."
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "true면 저장·게시하지 않고 검증 결과와 변경 미리보기만 반환합니다."
+          },
+          "skill_project_id": {
+            "type": "string",
+            "description": "수정할 Skill 식별자입니다."
+          },
+          "expected_draft_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "opscale_get_skill_draft가 반환한 draft_revision입니다."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Skill root 기준 상대 경로입니다."
+                },
+                "content": {
+                  "type": "string",
+                  "description": "추가·수정할 파일 전체 텍스트 내용입니다."
+                },
+                "delete": {
+                  "type": "boolean",
+                  "description": "true면 이 path의 파일을 삭제합니다."
+                }
+              },
+              "required": [
+                "path"
+              ]
+            },
+            "maxItems": 50,
+            "description": "바꿀 파일만 보냅니다. 삭제는 {path, delete: true}입니다."
+          },
+          "include_unpublished_changes": {
+            "type": "boolean",
+            "description": "사용자가 확인한 경우에만 true로 보내 웹의 미게시 변경도 함께 게시합니다."
+          }
+        },
+        "required": [
+          "skill_project_id",
+          "expected_draft_revision",
+          "title"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     }
   ]
 }

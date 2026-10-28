@@ -1,5 +1,5 @@
 ---
-description: The user wants to author an OPSCALE Skill; the agent should call opscale_skill_guide and relay its rules.
+description: The user asks how to write an OPSCALE Skill; the agent should load the authoring skill and relay its required rules without inventing a mandatory folder layout.
 tags: [authoring]
 max_turns: 10
 allowed_tools: [Read, Glob, Grep, Skill]
