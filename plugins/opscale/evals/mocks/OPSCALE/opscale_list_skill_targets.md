@@ -1,0 +1,1 @@
+{"status": "ok", "projects": [{"org_key": "DEMO", "project_id": "prj_fin", "project_key": "finance", "project_name": "재경팀", "write_role": "project_admin", "skills": [{"skill_project_id": "sp_0001", "name": "월간 손익 요약", "tool_name": "monthly-pnl", "effective_tool_name": "demo-finance-monthly-pnl", "draft_revision": 4, "stable_version_no": 4}]}]}

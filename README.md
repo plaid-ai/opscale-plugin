@@ -6,6 +6,7 @@ OPSCALE is a multi-tenant platform where organizations author, publish, and gove
 
 - connects the agent to the OPSCALE MCP server (`https://mcp-opscale.plaidlabs.ai/`), with sign-in handled by the agent's own OAuth flow
 - adds an `opscale` skill that tells the agent to check OPSCALE once per request, run a matching Skill, and read its bundle files correctly
+- adds an `opscale-skill-authoring` skill with the rules and procedure for creating and updating OPSCALE Skills through the OPSCALE authoring tools, which publish immediately
 
 The plugin contains no organization content. What you can see and run is decided by OPSCALE at sign-in and on every call.
 
@@ -42,6 +43,7 @@ plugins/opscale/                  the plugin
   skills/opscale/SKILL.md         procedure skill
   skills/opscale/agents/openai.yaml  skill display name and icon for the Codex UI
   skills/opscale/assets/          skill icons referenced by openai.yaml
+  skills/opscale-skill-authoring/ authoring skill (same layout as skills/opscale/)
   evals/                          claude plugin eval cases
 ```
 
@@ -59,7 +61,7 @@ Evals run against mocked OPSCALE tools under `plugins/opscale/evals/mocks/`, so 
 
 ## Scope
 
-Version 0.1 is deliberately minimal: MCP server plus skill, no hooks. Hooks that force a discovery step, and submission to public plugin catalogs, are planned once the skill-only baseline has been measured.
+Version 0.2 is deliberately minimal: MCP server plus skills, no hooks. Hooks that force a discovery step, and submission to public plugin catalogs, are planned once the skill-only baseline has been measured.
 
 ## License
 
@@ -69,6 +71,6 @@ MIT
 
 ## 한국어
 
-Claude Code와 Codex에서 조직의 OPSCALE Skill을 바로 쓰기 위한 플러그인입니다. OPSCALE MCP 서버 연결과 절차 스킬 하나만 담고 있으며, 조직 콘텐츠는 들어 있지 않습니다. 접근 권한은 OPSCALE 로그인(OAuth)이 결정합니다.
+Claude Code와 Codex에서 조직의 OPSCALE Skill을 바로 쓰기 위한 플러그인입니다. OPSCALE MCP 서버 연결과 절차 스킬(`opscale`), Skill 저작 스킬(`opscale-skill-authoring`)만 담고 있으며, 조직 콘텐츠는 들어 있지 않습니다. 저작 도구로 저장한 Skill은 바로 조직에 게시됩니다. 접근 권한은 OPSCALE 로그인(OAuth)이 결정합니다.
 
 설치 후 Claude Code는 `/mcp`에서, Codex는 새 세션을 열고 `/mcp`에서 `OPSCALE`에 로그인하면 됩니다.
