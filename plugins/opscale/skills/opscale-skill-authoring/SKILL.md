@@ -18,7 +18,7 @@ Saving a Skill through the OPSCALE authoring tools publishes it to the organizat
 
 The server rejects a save that breaks any of these:
 
-- Exactly one entry file, `SKILL.md`, directly under the Skill root.
+- Exactly one entry file directly under the Skill root. Name it `SKILL.md` in a new Skill. The server also accepts `skill.md`, `skills.md`, and `SKILLS.md`; when editing an existing Skill, keep its entry file name and never add a second entry file.
 - YAML frontmatter at the top of the entry file with `name` and `description`.
   - `name`: letters, digits, `-`, and `_` only. Unique within the project. The runtime tool name `{org}-{project}-{name}` must be 128 characters or less. Server tool names (`opscale_*`) are reserved.
   - `description`: not empty and not the placeholder text.
@@ -51,7 +51,7 @@ The save succeeds but the Skill fails at run time when it breaks these:
 
 ## 6. Procedure
 
-1. Call `opscale_list_skill_targets` to choose the project and the Skill. If more than one candidate fits, ask the user to choose. If none fits, the user lacks write access; see section 8.
+1. Call `opscale_list_skill_targets` to choose the project and the Skill. If more than one candidate fits, ask the user to choose. If none fits, the user lacks write access; see section 8. If the OPSCALE tools do not include `opscale_list_skill_targets`, this connection cannot author Skills: the user lacks write access, or authoring is not enabled for this organization. Tell the user to create or edit the Skill in the OPSCALE web editor, and use sections 2 to 5 for its content. Do not call `opscale_skill_guide`.
 2. New Skill: call `opscale_create_skill` with every file, including `SKILL.md`, in `files[]` as `{path, content}`.
 3. Existing Skill:
    1. Call `opscale_get_skill_draft`. Read other draft files through their URIs only when the change needs them, with `resources/read` or `opscale_read_bundle_file`.

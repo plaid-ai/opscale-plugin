@@ -1,7 +1,7 @@
 {
   "name": "opscale",
-  "version": "0.2.0",
-  "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server and a procedure skill that checks OPSCALE once per request.",
+  "version": "0.3.0",
+  "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server, a procedure skill that checks OPSCALE once per request, and a Skill authoring skill.",
   "author": {
     "name": "Plaid Labs",
     "url": "https://plaidlabs.ai"
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "OPSCALE",
     "shortDescription": "Run your organization's OPSCALE Skills",
-    "longDescription": "OPSCALE is a multi-tenant platform where organizations author, publish, and govern agent Skills. This plugin connects Codex to the OPSCALE MCP server and adds a procedure skill that checks OPSCALE once per request, runs a matching Skill, and reads its bundle files correctly. Access is controlled by OPSCALE OAuth; the plugin contains no organization content.",
+    "longDescription": "OPSCALE is a multi-tenant platform where organizations author, publish, and govern agent Skills. This plugin connects Codex to the OPSCALE MCP server and adds a procedure skill that checks OPSCALE once per request, runs a matching Skill, and reads its bundle files correctly, plus a skill for creating and updating OPSCALE Skills. Access is controlled by OPSCALE OAuth; the plugin contains no organization content.",
     "developerName": "Plaid Labs",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
