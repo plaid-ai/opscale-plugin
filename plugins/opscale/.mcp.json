@@ -3,11 +3,9 @@
     "OPSCALE": {
       "type": "http",
       "url": "https://mcp-opscale.plaidlabs.ai/",
-      "headers": {
-        "X-Opscale-Plugin-Version": "0.3.0"
-      },
+      "headersHelper": "echo '{\"X-Opscale-Plugin-Version\":\"0.3.1\"}'",
       "http_headers": {
-        "X-Opscale-Plugin-Version": "0.3.0"
+        "X-Opscale-Plugin-Version": "0.3.1"
       }
     }
   }
