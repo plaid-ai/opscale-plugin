@@ -1,11 +1,16 @@
 """Check that every manifest and the MCP version header carry the same plugin version.
 
+Claude Code gets the header from `headersHelper` and Codex from `http_headers`. A static
+`headers` entry is rejected: Claude Code keys the stored OPSCALE login by the static headers,
+so a version there would sign every user out on each update.
+
 With --base <git ref>, also fail when files under plugins/ changed since that ref
 but the version did not, because Claude Code and Codex update only on a new version.
 """
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -19,6 +24,11 @@ def _load(path: str) -> dict:
     return json.loads((ROOT / path).read_text())
 
 
+def _helper_version(server: dict) -> str | None:
+    match = re.search(rf'\\?"{HEADER}\\?"\s*:\s*\\?"([^"\\]+)', server.get("headersHelper") or "")
+    return match.group(1) if match else None
+
+
 def collect_versions() -> dict[str, str | None]:
     server = _load("plugins/opscale/.mcp.json")["mcpServers"]["OPSCALE"]
     marketplace = _load(".claude-plugin/marketplace.json")
@@ -27,7 +37,7 @@ def collect_versions() -> dict[str, str | None]:
         CLAUDE_MANIFEST: _load(CLAUDE_MANIFEST).get("version"),
         "plugins/opscale/.codex-plugin/plugin.json": _load("plugins/opscale/.codex-plugin/plugin.json").get("version"),
         ".claude-plugin/marketplace.json": entry.get("version"),
-        ".mcp.json headers": (server.get("headers") or {}).get(HEADER),
+        ".mcp.json headersHelper": _helper_version(server),
         ".mcp.json http_headers": (server.get("http_headers") or {}).get(HEADER),
     }
 
@@ -41,6 +51,10 @@ def main() -> int:
     parser.add_argument("--base", help="git ref to compare against, e.g. origin/main")
     args = parser.parse_args()
 
+    server = _load("plugins/opscale/.mcp.json")["mcpServers"]["OPSCALE"]
+    if server.get("headers"):
+        print("error: .mcp.json must not set static headers; use headersHelper (see module docstring)", file=sys.stderr)
+        return 1
     versions = collect_versions()
     if len(set(versions.values())) != 1 or None in versions.values():
         for source, version in versions.items():

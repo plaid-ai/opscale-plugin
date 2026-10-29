@@ -75,7 +75,9 @@ claude plugin eval ./plugins/opscale
 python3 scripts/check_versions.py
 ```
 
-Release rule: any change under `plugins/` bumps the version in `plugins/opscale/.claude-plugin/plugin.json`, `plugins/opscale/.codex-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and both version headers in `plugins/opscale/.mcp.json`. Claude Code and Codex decide whether to update by this version.
+Release rule: any change under `plugins/` bumps the version in `plugins/opscale/.claude-plugin/plugin.json`, `plugins/opscale/.codex-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and in `plugins/opscale/.mcp.json` both the `headersHelper` command (Claude Code) and `http_headers` (Codex). Claude Code and Codex decide whether to update by this version.
+
+Do not put the version in a static `headers` entry. Claude Code stores the OPSCALE sign-in under a key built from the server's `type`, `url`, and static `headers`, so a version there would sign every user out on each update. `headersHelper` output is not part of that key, and Codex ignores headers in its key. `scripts/check_versions.py` rejects a static `headers` entry.
 
 Evals run against mocked OPSCALE tools under `plugins/opscale/evals/mocks/`, so they need no OPSCALE account.
 
