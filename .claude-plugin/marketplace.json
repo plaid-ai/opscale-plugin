@@ -11,7 +11,7 @@
       "displayName": "OPSCALE",
       "source": "./plugins/opscale",
       "description": "Discover and run your organization's OPSCALE Skills. Bundles the OPSCALE MCP server, a procedure skill that checks OPSCALE once per request, and a Skill authoring skill.",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "author": {
         "name": "Plaid Labs"
       },
