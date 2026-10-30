@@ -14,7 +14,7 @@ If the OPSCALE tools include `opscale_plugin_update`, you must handle it before 
 ## 1. Discover
 
 1. List the tools of the `OPSCALE` MCP server. In Claude Code they appear as `mcp__plugin_opscale_OPSCALE__<tool>` and may be deferred, so search for them (for example with ToolSearch and the keyword `opscale`) instead of assuming there are none.
-2. Skills are named `<org>-<project>-<skill>`. Server-wide tools whose names start with `opscale_` are helpers, not Skills: `opscale_read_bundle_file`, `opscale_get_asset_url`, `opscale_skill_guide`, `opscale_plugin_update`, and the authoring tools `opscale_list_skill_targets`, `opscale_get_skill_draft`, `opscale_create_skill`, and `opscale_update_skill`.
+2. Skills are named `<org>-<project>-<skill>`. Server-wide tools whose names start with `opscale_` are helpers, not Skills: `opscale_download_bundle`, `opscale_skill_guide`, `opscale_plugin_update`, and the authoring tools `opscale_list_skill_targets`, `opscale_get_skill_draft`, `opscale_create_skill`, and `opscale_update_skill`.
 3. Compare the user's request with each Skill's description. Do this once per request even when the request looks simple or you could handle it directly.
 4. If no Skill matches, proceed normally without OPSCALE. Do not invent organization policy or shared-state identifiers.
 5. If OPSCALE is not connected or returns an authentication error, tell the user how to authenticate (Claude Code: `/mcp`, choose `OPSCALE`, then Authenticate; Codex: `/mcp` shows servers that need login) and proceed without guessing organization policy.
@@ -31,12 +31,15 @@ If the OPSCALE tools include `opscale_plugin_update`, you must handle it before 
 The response `content` has a fixed shape. Read it in order.
 
 1. `content[0]` is a temporary-directory instruction. Follow it exactly: write or unpack bundle files only in a fresh temporary directory, and delete that directory when the work ends, including on failure.
-2. `content[1]` is the Skill's entry file (usually `skill.md`) followed by an index of the other bundle files with their `ops-skill://` URIs. Follow the entry file as the procedure.
+2. `content[1]` is the Skill's entry file (usually `skill.md`) followed by the bundle's `bundle_uri` (`ops-skill://...`) and a list of the other bundle files. Follow the entry file as the procedure.
 3. If the entry file lists requirements such as programs, MCP tools, accounts, or input files, check them before starting; if it lists none, proceed without checking. When the work needs a program or tool this environment lacks, do not improvise another way; tell the user what is missing.
-4. Read other bundle files only when the entry file tells you to. Use `resources/read` with the URI when the host exposes MCP resources; otherwise call `opscale_read_bundle_file` with the same URI. Do not read files the entry file does not ask for.
-5. Binary files (xlsx, xls, pdf, docx) cannot be read as text. When a read returns `BUNDLE_FILE_NOT_TEXT`, call `opscale_get_asset_url` as directed and download from the returned URL promptly; it expires after about 90 seconds.
-6. Run bundle scripts only inside the temporary directory from step 1.
-7. When the work is done and before your final reply, check whether `opscale_plugin_update` is among the OPSCALE tools. If it is, follow section 5 now.
+4. When the entry file needs any other bundle file, call `opscale_download_bundle` with that `bundle_uri`. It returns a URL to one zip with every file of the bundle, text and binary alike. The URL works for about 90 seconds and three downloads, so download it right away into the temporary directory from step 1 and unpack it there:
+   - macOS and Linux: `curl -fsSL -o bundle.zip '<url>' && unzip -q bundle.zip -d <temp dir>`
+   - Windows: `curl.exe -fsSL -o bundle.zip "<url>"`, then `tar -xf bundle.zip -C <temp dir>`
+5. After unpacking, open only the files the entry file asks for. The zip already holds every file the scripts need, so do not recreate bundle files by reading and rewriting them.
+6. If the URL has expired or the download fails, call `opscale_download_bundle` again for a new URL. If a call returns `BUNDLE_TOOL_RETIRED` (the old `opscale_read_bundle_file`, `opscale_get_asset_url`, or `resources/read`), use `opscale_download_bundle` with the `bundle_uri` in that error.
+7. Run bundle scripts only inside the temporary directory from step 1.
+8. When the work is done and before your final reply, check whether `opscale_plugin_update` is among the OPSCALE tools. If it is, follow section 5 now.
 
 ## 4. Authoring Skills
 

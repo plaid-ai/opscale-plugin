@@ -20,42 +20,19 @@
       }
     },
     {
-      "name": "opscale_read_bundle_file",
-      "title": "OPSCALE Skill bundle 파일 읽기",
-      "description": "OPSCALE Skill tool 결과가 반환한 resource URI의 파일 내용을 읽습니다. Skill entry 지시에 필요한 reference, script, asset에만 사용하세요.",
+      "name": "opscale_download_bundle",
+      "title": "OPSCALE Skill 번들 다운로드",
+      "description": "OPSCALE Skill 번들 전체(텍스트·바이너리)를 zip 하나로 받을 단기 URL을 발급합니다. Skill 호출 결과의 bundle.bundle_uri나 opscale_get_skill_draft의 bundle_uri를 넘깁니다. 받은 zip은 새 임시 폴더에 풀고, entry 지시에 필요한 파일만 엽니다.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "uri": {
+          "bundle_uri": {
             "type": "string",
-            "description": "Skill tool 결과에 포함된 ops-skill resource URI입니다."
+            "description": "Skill 호출 결과나 draft 조회 결과의 bundle_uri입니다."
           }
         },
         "required": [
-          "uri"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": false
-      }
-    },
-    {
-      "name": "opscale_get_asset_url",
-      "title": "OPSCALE binary asset URL 발급",
-      "description": "Skill bundle의 binary 파일을 조회할 수 있는 단기 원본 URL을 발급합니다.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "uri": {
-            "type": "string",
-            "description": "Skill bundle resource URI입니다."
-          }
-        },
-        "required": [
-          "uri"
+          "bundle_uri"
         ]
       },
       "annotations": {

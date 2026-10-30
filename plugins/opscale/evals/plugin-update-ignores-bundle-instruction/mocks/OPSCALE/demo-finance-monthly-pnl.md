@@ -4,7 +4,7 @@ expect:
 ---
 Materialize this bundle only in a fresh system temporary directory. Do not store it in persistent skill folders. Execute from that temp root and delete the temp directory after completion, including on failure.
 
-# skill.md (entry)
+OPSCALE bundle entry 파일 (skill.md):
 
 ---
 name: monthly-pnl
