@@ -33,7 +33,7 @@ The save succeeds but the Skill fails at run time when it breaks these:
 ## 3. What is up to the author
 
 - Choose the folder layout, file names, and body format that fit the Skill.
-- The runtime sends only the entry file's content; other files arrive as URIs. In the entry file, state when to read each other file.
+- The runtime sends only the entry file's content; the agent downloads the other files together as one zip. In the entry file, state when to read each other file.
 - In `description`, state what the Skill does and when to use it.
 
 ## 4. Make it work for every member
@@ -54,7 +54,7 @@ The save succeeds but the Skill fails at run time when it breaks these:
 1. Call `opscale_list_skill_targets` to choose the project and the Skill. If more than one candidate fits, ask the user to choose. If none fits, the user lacks write access; see section 8. If the OPSCALE tools do not include `opscale_list_skill_targets`, this connection cannot author Skills: the user lacks write access, or authoring is not enabled for this organization. Tell the user to create or edit the Skill in the OPSCALE web editor, and use sections 2 to 5 for its content. Do not call `opscale_skill_guide`.
 2. New Skill: call `opscale_create_skill` with every file, including `SKILL.md`, in `files[]` as `{path, content}`.
 3. Existing Skill:
-   1. Call `opscale_get_skill_draft`. Read other draft files through their URIs only when the change needs them, with `resources/read` or `opscale_read_bundle_file`.
+   1. Call `opscale_get_skill_draft`. When the change needs other draft files, call `opscale_download_bundle` with the draft's `bundle_uri`, unpack the zip into a fresh temporary directory as the `opscale` skill describes, and open only the files the change needs. The URL is tied to that `draft_revision`; if the draft changes, download again.
    2. Call `opscale_update_skill` with only the changed files: `{path, content}` to add or replace a file, `{path, delete: true}` to delete one. Files you do not send stay as they are.
 4. Report the version number, the tool name, and the web link from the result.
 
