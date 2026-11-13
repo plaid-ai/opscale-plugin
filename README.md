@@ -7,7 +7,7 @@ OPSCALE is a multi-tenant platform where organizations author, publish, and gove
 - connects the agent to the OPSCALE MCP server (`https://mcp-opscale.plaidlabs.ai/`), with sign-in handled by the agent's own OAuth flow
 - adds an `opscale` skill that tells the agent to check OPSCALE once per request, run a matching Skill, and read its bundle files correctly
 - adds an `opscale-skill-authoring` skill with the rules and procedure for creating and updating OPSCALE Skills through the OPSCALE authoring tools, which publish immediately
-- sends its version to OPSCALE in the `X-Opscale-Plugin-Version` header, so OPSCALE can tell an out-of-date plugin to update itself (see [Updates](#updates))
+- states its version in the `opscale` skill, so the agent can compare it with the latest version OPSCALE announces and update an out-of-date plugin (see [Updates](#updates))
 
 The plugin contains no organization content. What you can see and run is decided by OPSCALE at sign-in and on every call.
 
@@ -33,7 +33,7 @@ Start a new session, then run `/mcp` to sign in to `OPSCALE`.
 
 ## Updates
 
-When a newer plugin is released, OPSCALE shows an out-of-date plugin the `opscale_plugin_update` tool. After finishing your request, the agent runs the update commands that tool returns and tells you; the new version applies from the next session. The agent runs only `claude plugin …` or `codex plugin …` commands for this marketplace.
+OPSCALE announces the latest plugin version in its server instructions. The agent compares it with the `Plugin version:` line in the `opscale` skill. When the installed plugin is older, the agent finishes your request, runs the update commands the `opscale_plugin_update` tool returns, and tells you; the new version applies from the next session. The plugin does not send its version to OPSCALE. The agent runs only `claude plugin …` or `codex plugin …` commands for this marketplace.
 
 To update by hand:
 
@@ -61,7 +61,7 @@ plugins/opscale/                  the plugin
   skills/opscale/assets/          skill icons referenced by openai.yaml
   skills/opscale-skill-authoring/ authoring skill (same layout as skills/opscale/)
   evals/                          claude plugin eval cases
-scripts/check_versions.py         CI check that every manifest and the version header agree
+scripts/check_versions.py         CI check that every manifest and the skill's version line agree
 ```
 
 One repository serves as both the marketplace and the plugin for both clients.
@@ -75,9 +75,9 @@ claude plugin eval ./plugins/opscale
 python3 scripts/check_versions.py
 ```
 
-Release rule: any change under `plugins/` bumps the version in `plugins/opscale/.claude-plugin/plugin.json`, `plugins/opscale/.codex-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and in `plugins/opscale/.mcp.json` both the `headersHelper` command (Claude Code) and `http_headers` (Codex). Claude Code and Codex decide whether to update by this version.
+Release rule: any change under `plugins/` bumps the version in `plugins/opscale/.claude-plugin/plugin.json`, `plugins/opscale/.codex-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and the `Plugin version:` line in `plugins/opscale/skills/opscale/SKILL.md`. Claude Code and Codex decide whether to update by the manifest version, and the agent decides whether to run the update commands by the skill line.
 
-Do not put the version in a static `headers` entry. Claude Code stores the OPSCALE sign-in under a key built from the server's `type`, `url`, and static `headers`, so a version there would sign every user out on each update. `headersHelper` output is not part of that key, and Codex ignores headers in its key. `scripts/check_versions.py` rejects a static `headers` entry.
+Do not add `headers`, `headersHelper`, or `http_headers` to `plugins/opscale/.mcp.json`. Claude Code stores the OPSCALE sign-in under a key built from the server's `type`, `url`, and static `headers`, so a version there would sign every user out on each update, and a `headersHelper` shell command does not run the same way on every platform. `scripts/check_versions.py` rejects all three.
 
 Evals run against mocked OPSCALE tools under `plugins/opscale/evals/mocks/`, so they need no OPSCALE account.
 

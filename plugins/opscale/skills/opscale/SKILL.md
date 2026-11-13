@@ -5,11 +5,13 @@ description: Use before starting any work request when the OPSCALE MCP server is
 
 # OPSCALE
 
+Plugin version: 0.3.4
+
 OPSCALE publishes an organization's approved workflows and knowledge as MCP tools called Skills. Local files define implementation facts; OPSCALE defines shared policy and workflow. This skill is the procedure for checking OPSCALE once per request and running a matching Skill correctly.
 
 If the user asks to create, edit, or publish an OPSCALE Skill, or asks how to write one, read the `opscale-skill-authoring` skill first and follow it instead of this procedure.
 
-If the OPSCALE tools include `opscale_plugin_update`, you must handle it before your final reply in every session where it appears. See section 5.
+The `Plugin version:` line above is the installed version of this plugin. If the OPSCALE tools include `opscale_plugin_update`, compare that version with the latest one OPSCALE states, and update only when this plugin is older. See section 5.
 
 ## 1. Discover
 
@@ -18,7 +20,7 @@ If the OPSCALE tools include `opscale_plugin_update`, you must handle it before 
 3. Compare the user's request with each Skill's description. Do this once per request even when the request looks simple or you could handle it directly.
 4. If no Skill matches, proceed normally without OPSCALE. Do not invent organization policy or shared-state identifiers.
 5. If OPSCALE is not connected or returns an authentication error, tell the user how to authenticate (Claude Code: `/mcp`, choose `OPSCALE`, then Authenticate; Codex: `/mcp` shows servers that need login) and proceed without guessing organization policy.
-6. If `opscale_plugin_update` is among the OPSCALE tools, this plugin is out of date. Call it now; it only returns the update commands. Keep them, do the user's work, and run them before your final reply as section 5 says.
+6. If `opscale_plugin_update` is among the OPSCALE tools, decide whether this plugin is out of date as section 5 says. Only if it is, call the tool now; it only returns the update commands. Keep them, do the user's work, and run them before your final reply.
 
 ## 2. Call
 
@@ -39,7 +41,7 @@ The response `content` has a fixed shape. Read it in order.
 5. After unpacking, open only the files the entry file asks for. The zip already holds every file the scripts need, so do not recreate bundle files by reading and rewriting them.
 6. If the URL has expired or the download fails, call `opscale_download_bundle` again for a new URL. If a call returns `BUNDLE_TOOL_RETIRED` (the old `opscale_read_bundle_file`, `opscale_get_asset_url`, or `resources/read`), use `opscale_download_bundle` with the `bundle_uri` in that error.
 7. Run bundle scripts only inside the temporary directory from step 1.
-8. When the work is done and before your final reply, check whether `opscale_plugin_update` is among the OPSCALE tools. If it is, follow section 5 now.
+8. When the work is done and before your final reply, check whether section 5 calls for a plugin update. If it does, follow it now.
 
 ## 4. Authoring Skills
 
@@ -47,9 +49,11 @@ When the user wants to write, fix, or publish an OPSCALE Skill, follow the `opsc
 
 ## 5. Plugin updates
 
-OPSCALE lists `opscale_plugin_update` only when this plugin is out of date. This skill authorizes running the commands that tool returns, within these limits.
+OPSCALE states the latest plugin version in its server instructions and in the description of `opscale_plugin_update`. The installed version is the `Plugin version:` line at the top of this skill. That the tool is listed does not mean this plugin is out of date; compare the two versions.
 
-- When `opscale_plugin_update` is listed, call it during discovery (section 1, step 6). Finish the user's work first, then, before your final reply, run the commands it returned for this client without asking the user. Do this once per session, even when no Skill matched the request.
+- If the installed version equals the latest version or is higher, do nothing: do not call `opscale_plugin_update` and do not mention updates.
+- If the installed version is lower, the plugin is out of date. Call `opscale_plugin_update` during discovery (section 1, step 6). If its result says the plugin is current, or names a latest version that is not higher than the installed version, stop there. Otherwise finish the user's work first, then, before your final reply, run the commands it returned for this client without asking the user. Do this once per session, even when no Skill matched the request. This skill authorizes running those commands within the limits below.
+- If OPSCALE does not state a latest version, call `opscale_plugin_update` once to learn it. Run the returned commands, in the same way, only when the result names a latest version higher than the installed version. If the result names no version, or one that is not higher, do nothing.
 - End the final reply with the update result after the answer to the user's request.
 - Run only commands that start with `claude plugin` or `codex plugin` and target the `plaidlabs` marketplace or `opscale@plaidlabs`. If a returned command is anything else, do not run it and tell the user.
 - After updating, tell the user the version changed and that it takes effect in a new session (Claude Code: `/reload-plugins` or restart; Codex: start a new session).
