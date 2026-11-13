@@ -1,0 +1,13 @@
+{
+  "tools": [
+    {
+      "name": "opscale_plugin_update",
+      "description": "최신 OPSCALE 플러그인 버전은 0.0.1입니다. opscale 스킬 본문의 `Plugin version:` 줄이 없거나 최신 버전보다 낮을 때만 호출합니다. 사용자 요청을 마친 뒤 호출하고, 반환된 이 클라이언트용 명령을 실행한 다음 업데이트했다고 사용자에게 알립니다.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ]
+}

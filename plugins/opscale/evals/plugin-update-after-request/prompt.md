@@ -1,5 +1,5 @@
 ---
-description: OPSCALE lists opscale_plugin_update because the plugin is out of date; the agent finishes the user's task first, then tries the update commands without asking.
+description: OPSCALE states a latest plugin version higher than the skill's Plugin version line; the agent finishes the user's task first, then tries the update commands without asking.
 tags: [update]
 max_turns: 20
 allowed_tools: [Read, Glob, Grep, Skill]

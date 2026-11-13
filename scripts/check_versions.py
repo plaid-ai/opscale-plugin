@@ -1,8 +1,10 @@
-"""Check that every manifest and the MCP version header carry the same plugin version.
+"""Check that every manifest and the opscale skill carry the same plugin version.
 
-Claude Code gets the header from `headersHelper` and Codex from `http_headers`. A static
-`headers` entry is rejected: Claude Code keys the stored OPSCALE login by the static headers,
-so a version there would sign every user out on each update.
+The agent reads the installed version from the `Plugin version:` line in the opscale skill body
+and compares it with the latest version OPSCALE states, so that line must match the manifests.
+The plugin sends no version header: `.mcp.json` must not set `headers`, `headersHelper`, or
+`http_headers`. A static `headers` entry would also change the key Claude Code stores the
+OPSCALE login under and sign every user out on each update.
 
 With --base <git ref>, also fail when files under plugins/ changed since that ref
 but the version did not, because Claude Code and Codex update only on a new version.
@@ -16,7 +18,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HEADER = "X-Opscale-Plugin-Version"
+SKILL = "plugins/opscale/skills/opscale/SKILL.md"
+HEADER_KEYS = ("headers", "headersHelper", "http_headers")
 CLAUDE_MANIFEST = "plugins/opscale/.claude-plugin/plugin.json"
 
 
@@ -24,21 +27,22 @@ def _load(path: str) -> dict:
     return json.loads((ROOT / path).read_text())
 
 
-def _helper_version(server: dict) -> str | None:
-    match = re.search(rf'\\?"{HEADER}\\?"\s*:\s*\\?"([^"\\]+)', server.get("headersHelper") or "")
-    return match.group(1) if match else None
+def _skill_version() -> str | None:
+    """Return the version on the skill body's `Plugin version:` line, ignoring frontmatter."""
+    text = (ROOT / SKILL).read_text()
+    body = text.split("---", 2)[2] if text.startswith("---") else text
+    matches = re.findall(r"^Plugin version: (\S+)$", body, flags=re.MULTILINE)
+    return matches[0] if len(matches) == 1 else None
 
 
 def collect_versions() -> dict[str, str | None]:
-    server = _load("plugins/opscale/.mcp.json")["mcpServers"]["OPSCALE"]
     marketplace = _load(".claude-plugin/marketplace.json")
     entry = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == "opscale")
     return {
         CLAUDE_MANIFEST: _load(CLAUDE_MANIFEST).get("version"),
         "plugins/opscale/.codex-plugin/plugin.json": _load("plugins/opscale/.codex-plugin/plugin.json").get("version"),
         ".claude-plugin/marketplace.json": entry.get("version"),
-        ".mcp.json headersHelper": _helper_version(server),
-        ".mcp.json http_headers": (server.get("http_headers") or {}).get(HEADER),
+        f"{SKILL} `Plugin version:` line": _skill_version(),
     }
 
 
@@ -52,8 +56,9 @@ def main() -> int:
     args = parser.parse_args()
 
     server = _load("plugins/opscale/.mcp.json")["mcpServers"]["OPSCALE"]
-    if server.get("headers"):
-        print("error: .mcp.json must not set static headers; use headersHelper (see module docstring)", file=sys.stderr)
+    present = [key for key in HEADER_KEYS if key in server]
+    if present:
+        print(f"error: .mcp.json must not set {', '.join(present)} (see module docstring)", file=sys.stderr)
         return 1
     versions = collect_versions()
     if len(set(versions.values())) != 1 or None in versions.values():
